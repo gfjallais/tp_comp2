@@ -104,16 +104,16 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <expression> optional_assign
 
 /* Precedence declarations go here. */
-%left '.'
-%left '@'
-%left '~' 
-%left ISVOID
-%left '*' '/'
-%left '+' '-'
-%nonassoc '<' '=' LE
-%right NOT
-%right ASSIGN
 %right FLAG
+%right ASSIGN
+%right NOT
+%nonassoc '<' '=' LE
+%left '+' '-'
+%left '*' '/'
+%left ISVOID
+%left '~' 
+%left '@'
+%left '.'
 
 %%
 /* 
