@@ -134,12 +134,13 @@ class_list
 	;
 
 /* If no parent is specified, the class inherits from the Object class. */
-class	: CLASS TYPEID '{' features_list '}' ';'
-		{ $$ = class_($2,idtable.add_string("Object"),$4,
-			      stringtable.add_string(curr_filename)); }
-	| CLASS TYPEID INHERITS TYPEID '{' features_list '}' ';'
-		{ $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); }
-	;
+class	: 
+    CLASS TYPEID '{' features_list '}' ';' { 
+      $$ = class_($2,idtable.add_string("Object"),$4,stringtable.add_string(curr_filename)); 
+      }
+	  | CLASS TYPEID INHERITS TYPEID '{' features_list '}' ';' { 
+      $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); 
+    };
 
 /* Feature list may be empty, but no empty features in list. */
 features_list: 
@@ -155,7 +156,7 @@ feature:
       $$ = method($1, $3, $6, $8);
   }
   | OBJECTID ':' TYPEID optional_assign ';' {
-      $$ = attr($1, $3, $4)
+      $$ = attr($1, $3, $4);
   }
   | error ';' {};
 
@@ -164,7 +165,7 @@ formal_list:
     $$ = nil_Formals();
   }
   | formal {
-    $$ = single_Formals($1)
+    $$ = single_Formals($1);
   }
   | formal_list ',' formal { 
     $$ = append_Formals($1,single_Formals($3));
@@ -291,7 +292,7 @@ expression:
     $$ = object($1);
   }
   | INT_CONST {
-    $$ = comp($1);
+    $$ = int_const($1);
   }
   | STR_CONST {
     $$ = string_const($1);
