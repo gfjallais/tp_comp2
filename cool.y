@@ -91,8 +91,8 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 /* You will want to change the following line. */
 %type <features> features_list
 %type <feature> feature
-%type <boolean> boolean
-%type <symbol> symbol
+/* %type <boolean> boolean
+%type <symbol> symbol */
 %type <formal> formal 
 %type <formals> formal_list 
 %type <case_> case 
@@ -291,7 +291,7 @@ expression:
     $$ = object($1);
   }
   | INT_CONST {
-    $$ = comp($2);
+    $$ = comp($1);
   }
   | STR_CONST {
     $$ = string_const($1);
