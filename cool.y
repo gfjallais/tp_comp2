@@ -97,11 +97,11 @@ int omerrs = 0;               /* number of errors in lexing and parsing */
 %type <formals> formal_list 
 %type <case_> case 
 %type <cases> case_list
-%type <expressions> expression_list1
-%type <expressions> expression_list2
+%type <expression> assign_expr
 %type <expression> expression
 %type <expression> let
-%type <expression> optional_assign
+%type <expressions> expression_list1
+%type <expressions> expression_list2
 
 /* Precedence declarations go here. */
 %right FLAG
@@ -140,7 +140,8 @@ class	:
       }
 	  | CLASS TYPEID INHERITS TYPEID '{' features_list '}' ';' { 
       $$ = class_($2,$4,$6,stringtable.add_string(curr_filename)); 
-    };
+    }
+    | error ';' { yyerrok; };
 
 /* Feature list may be empty, but no empty features in list. */
 features_list: 
@@ -155,7 +156,7 @@ feature:
   OBJECTID '(' formal_list ')' ':' TYPEID '{' expression '}' ';' {
       $$ = method($1, $3, $6, $8);
   }
-  | OBJECTID ':' TYPEID optional_assign ';' {
+  | OBJECTID ':' TYPEID assign_expr ';' {
       $$ = attr($1, $3, $4);
   }
   | error ';' {};
@@ -196,7 +197,7 @@ expression_list2:
   }
   | error ';' { yyerrok; };
 
-optional_assign: 
+assign_expr: 
   {
     $$ = no_expr();
   }
@@ -205,10 +206,10 @@ optional_assign:
   };
 
 let: 
-  OBJECTID ':' TYPEID optional_assign IN expression %prec FLAG {
+  OBJECTID ':' TYPEID assign_expr IN expression %prec FLAG {
     $$ = let($1, $3, $4, $6);
   }
-  | OBJECTID ':' TYPEID optional_assign ',' let {
+  | OBJECTID ':' TYPEID assign_expr ',' let {
     $$ = let($1, $3, $4, $6);
   }
   | error IN expression %prec FLAG { yyerrok; }
@@ -230,6 +231,9 @@ case:
 expression: 
   OBJECTID ASSIGN expression {
     $$ = assign($1, $3);
+  }
+  | expression '.' OBJECTID '(' expression_list1 ')' {
+    $$ = dispatch($1, $3, $5);
   }
   | expression '@' TYPEID '.' OBJECTID '(' expression_list1 ')' {
     $$ = static_dispatch($1, $3, $5, $7);
