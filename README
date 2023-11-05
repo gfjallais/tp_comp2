@@ -132,3 +132,44 @@ Instructions
 
 Write-up for PA3
 ----------------
+Aluno: Gabriel Franco Jallais
+Matrícula: 2021031890
+
+*Introdução:*
+
+Nesta tarefa, o objetivo foi escrever regras de análise sintática para o Cool
+em um arquivo chamado cool.y. O propósito era criar um analisador sintático 
+para reconhecer a estrutura da linguagem Cool, conforme definida no Manual de 
+Referência do Cool, página 17.
+
+*Regras de Análise Sintática:*
+
+As regras de análise sintática foram escritas de acordo com a definição dos 
+nós AST (Abstract Syntax Tree) em cool-tree.aps. Por exemplo, para a construção 
+da classe, a definição do construtor é a seguinte:
+
+constructor formal(name, type_decl: Symbol) : Formal;
+
+A regra de análise sintática correspondente é:
+
+formal: 
+  OBJECTID ':' TYPEID {
+    $$ = formal($1, $3);
+  }
+
+Tratamento de Erros:
+
+O Cool apresenta ambiguidades, especialmente na construção "let", que é resolvida 
+pelo manual indicando que uma expressão "let" se estende o máximo possível para a 
+direita. O analisador deve ser capaz de lidar com erros em definições de classe, 
+características, vinculações "let" e expressões dentro de blocos, permitindo que 
+o parsing continue a partir do próximo ponto correto na entrada.
+
+Conclusão:
+
+Após completar as regras de análise sintática e garantir a capacidade de lidar com 
+situações de erro de forma adequada, o analisador sintático para a linguagem Cool 
+foi implementado com sucesso. Este exercício destacou a importância do analisador 
+sintático no processo de compilação, garantindo que a estrutura da linguagem seja 
+reconhecida corretamente para a geração posterior do código intermediário e, 
+eventualmente, do código de máquina.
